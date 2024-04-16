@@ -2,9 +2,6 @@ pandas
 numpy
 torch
 torchvision
-cmake
-dlib
-face-recognition
 opencv-python
 matplotlib
 scikit-learn
