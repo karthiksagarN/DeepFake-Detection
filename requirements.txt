@@ -2,6 +2,7 @@ pandas
 numpy
 torch
 torchvision
+dlib
 face-recognition
 opencv-python
 matplotlib
