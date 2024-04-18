@@ -110,26 +110,53 @@ def save_uploaded_file(uploaded_file, save_dir):
         f.write(uploaded_file.getbuffer())
     return file_path
 
-def index():
-    st.title("Fake Video Detection")
+
+def run_model():
+
+    page_bg_img = '''
+    <style>
+    body {
+    background-image: url(https://github.com/karthiksagarN/DeepFake-Detection/blob/8b23d7fabf5e81db993ad71569626b3376bb6137/streamlit-webapp/background.jpeg);
+    background-size: cover;
+    }
+    </style>
+    '''
+
+    st.markdown(page_bg_img, unsafe_allow_html=True)
+
+    st.title("DeepFake Video Detection")
     uploaded_file = st.file_uploader("Upload a video", type=["mp4", "gif", "webm", "avi", "3gp", "wmv", "flv", "mkv"])
+
     if uploaded_file is not None:
+
+        # Display the uploaded video
+        st.video(uploaded_file)
+
         sequence_length = st.number_input("Enter sequence length", min_value=1, value=60)
-        model = Model(2).cuda()
-        st.write("Model loaded successfully.")
-        st.write("Starting prediction...")
         
-        # Save the uploaded file to disk
-        video_path = save_uploaded_file(uploaded_file, "uploaded_videos")
-        
-        video_dataset = validation_dataset([video_path], sequence_length=sequence_length, transform=train_transforms)
-        #model_name = get_accurate_model(sequence_length)
-        path_to_model = "/content/drive/MyDrive/DeepFake/best_model_accuracy.pt"
-        model.load_state_dict(torch.load(path_to_model))
-        model.eval()
-        prediction = predict(model, video_dataset[0])
-        st.write("Prediction:", "REAL" if prediction[0] == 1 else "FAKE")
-        st.write("Confidence:", round(prediction[1], 2))
+        if sequence_length:
+            model = Model(2)
+            st.write("Model loaded successfully.")
+            st.write("Starting prediction...")
+
+            # Save the uploaded file to disk
+            video_path = save_uploaded_file(uploaded_file, "uploaded_videos")
+
+            video_dataset = validation_dataset([video_path], sequence_length=sequence_length, transform=train_transforms)
+
+            # Load the trained model
+            path_to_model = "/Users/karthiksagar/DeepFake-Detection/Trained-Models/best_model_accuracy.pt"
+            # model.load_state_dict(torch.load(path_to_model))
+            model.load_state_dict(torch.load(path_to_model, map_location=torch.device('cpu')))
+            model.eval()
+            prediction = predict(model, video_dataset[0])
+
+            # Display prediction with icons or emojis
+            prediction_text = "REAL" if prediction[0] == 1 else "FAKE"
+            prediction_icon = "✅" if prediction[0] == 1 else "❌"
+            st.write(f"Prediction: {prediction_text} {prediction_icon}")
+
+            st.write("Confidence:", round(prediction[1], 2))
 
 if __name__ == "__main__":
-    index()
+    run_model()

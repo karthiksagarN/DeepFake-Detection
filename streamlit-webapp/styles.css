@@ -1,0 +1,4 @@
+body {
+    background-image: url("/Users/karthiksagar/DeepFake-Detection/streamlit-webapp/background.jpeg");
+    background-size: cover;
+}
