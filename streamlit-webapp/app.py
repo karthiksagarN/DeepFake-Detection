@@ -145,7 +145,7 @@ def run_model():
             video_dataset = validation_dataset([video_path], sequence_length=sequence_length, transform=train_transforms)
 
             # Load the trained model
-            path_to_model = "/Users/karthiksagar/DeepFake-Detection/Trained-Models/best_model_accuracy.pt"
+            path_to_model = "/Users/karthiksagar/DeepFake-Detection/saved_best_model/best-checkpoint-model.pt"
             # model.load_state_dict(torch.load(path_to_model))
             model.load_state_dict(torch.load(path_to_model, map_location=torch.device('cpu')))
             model.eval()
