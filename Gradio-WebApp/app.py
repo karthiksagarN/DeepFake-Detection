@@ -37,7 +37,7 @@ transform = transforms.Compose([
     transforms.Normalize(mean, std)
 ])
 
-def final_detetcion(frame_base64):
+def final_detection(frame_base64):
     frame_data = base64.b64decode(frame_base64)
     frame = Image.open(BytesIO(frame_data))
 
@@ -71,7 +71,7 @@ def process_frame(frame):
     buffered = BytesIO()
     pil_image.save(buffered, format="JPEG")
     img_str = base64.b64encode(buffered.getvalue()).decode('utf-8')
-    result, confidence = final_detetcion(img_str)
+    result, confidence = final_detection(img_str)
     return result, confidence
 
 def main(frame):
